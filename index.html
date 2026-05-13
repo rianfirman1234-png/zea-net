@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zea Net v3 - Full Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body { background-color: #0f172a; color: #f8fafc; }
+        .card { background: #1e293b; border: 1px solid #334155; }
+        .btn-green { background: #10b981; }
+        .btn-blue { background: #3b82f6; }
+    </style>
+</head>
+<body class="p-4 md:p-8">
+    <!-- Header -->
+    <div class="flex justify-between items-center mb-6">
+        <h1 class="text-2xl font-bold text-emerald-400">ZEA NET v3</h1>
+        <div class="text-right">
+            <p class="text-xs text-slate-400">Monitoring: <span class="text-emerald-500 font-bold">ONLINE</span></p>
+            <p class="text-xs text-slate-400">IP: 103.x.x.x (Publik)</p>
+        </div>
+    </div>
+
+    <!-- Stats Ringkas -->
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+        <div class="card p-4 rounded-xl text-center">
+            <p class="text-xs text-slate-400">Omset Mei</p>
+            <p class="text-xl font-bold text-white">Rp 35.000.000</p>
+        </div>
+        <div class="card p-4 rounded-xl text-center">
+            <p class="text-xs text-slate-400">Pelanggan Aktif</p>
+            <p class="text-xl font-bold text-white">1,847</p>
+        </div>
+        <div class="card p-4 rounded-xl text-center">
+            <p class="text-xs text-slate-400">Device Online</p>
+            <p class="text-xl font-bold text-emerald-400">98%</p>
+        </div>
+        <div class="card p-4 rounded-xl text-center">
+            <p class="text-xs text-slate-400">Voucher Sisa</p>
+            <p class="text-xl font-bold text-orange-400">142</p>
+        </div>
+    </div>
+
+    <!-- Menu Aksi Cepat -->
+    <!-- Baris 46 -->
+<button onclick="inputPelanggan()" class="btn-blue ...">➕ INPUT PELANGGAN BARU</button>
+
+<!-- Baris 47 -->
+<button onclick="sinkronGPS()" class="bg-purple-600 ...">📍 SYNC GPS / ODP</button>
+
+<!-- Baris 48 -->
+<button onclick="kontrolMikrotik()" class="bg-slate-700 ...">⚙️ KONTROL MIKROTIK</button>
+    </div>
+
+    <!-- Tabel Pelanggan & Pembayaran -->
+    <div class="card rounded-xl overflow-hidden">
+        <div class="p-4 bg-slate-800 border-b border-slate-700">
+            <h2 class="font-bold">Daftar Pelanggan & Status Bayar</h2>
+        </div>
+        <div class="overflow-x-auto">
+            <table class="w-full text-left text-sm">
+                <thead>
+                    <tr class="bg-slate-800/50 text-slate-400">
+                        <th class="p-4">Nama</th>
+                        <th class="p-4">Paket</th>
+                        <th class="p-4">Alamat/ODP</th>
+                        <th class="p-4">Status</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-700">
+                    <tr>
+                        <td class="p-4">Afsheera Azalea</td>
+                        <td class="p-4 text-xs">Rumahan 10Mbps</td>
+                        <td class="p-4 text-xs text-slate-400">Sindanglaya-ODP01</td>
+                        <td class="p-4"><span class="bg-emerald-900 text-emerald-400 px-2 py-1 rounded text-xs font-bold">LUNAS</span></td>
+                    </tr>
+                    <tr>
+                        <td class="p-4">Risman (Sub)</td>
+                        <td class="p-4 text-xs">Voucher Harian</td>
+                        <td class="p-4 text-xs text-slate-400">Cianjur-ODP05</td>
+                        <td class="p-4"><span class="bg-red-900 text-red-400 px-2 py-1 rounded text-xs font-bold">MENUNGGAK</span></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <footer class="mt-8 text-center text-slate-500 text-xs">
+        &copy; 2026 Zea Net - Fiber Network Management
+    </footer>
+</body>
+<script>
+async function inputPelanggan() {
+    const nama = prompt("Masukkan Nama Pelanggan:");
+    const paket = prompt("Masukkan Paket (misal: Rumahan 10Mbps):");
+    const alamat = prompt("Masukkan Alamat/ODP (Contoh: Sindanglaya-01):");
+
+    if (nama && paket && alamat) {
+        // Link ini sudah saya satukan kembali agar tidak terputus seperti di foto
+        const url = "https://script.google.com/macros/s/AKfycbwxQN_Um-2_wdNbApXIRHB4Xh_CvT0MOO5CkRbmfEriX5W1SRrkCP3NdS2OniwRuEXXPA/exec";
+
+        try {
+            await fetch(url, {
+                method: "POST",
+                mode: "no-cors",
+               body: JSON.stringify({ nama: nama, paket: paket, alamat: alamat })
+            });
+
+            alert("Berhasil! Data " + nama + " sudah masuk ke Google Sheets.");
+            location.reload();
+        } catch (error) {
+            alert("Waduh, ada masalah koneksi. Coba cek sinyal Pak.");
+        }
+    }
+}
+</script>
