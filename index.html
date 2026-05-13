@@ -38,6 +38,26 @@
         <h2 class="text-lg font-bold text-emerald-400">Peta Sebaran ODP & Jalur</h2>
         <span class="text-xs bg-emerald-500/20 text-emerald-400 px-2 py-1 rounded">Live GPS</span>
     </div>
+    <!-- Tombol Kontrol Jalur & Pelanggan -->
+<!-- Tombol Kontrol Jalur & Pelanggan -->
+<div class="flex flex-col gap-2 mb-3">
+    <div class="flex gap-2">
+        <!-- Tombol Oranye untuk hapus satu per satu -->
+        <button onclick="hapusTerakhir()" class="flex-1 bg-orange-500 hover:bg-orange-600 text-white text-xs font-bold py-2 px-3 rounded-lg shadow-lg">
+            ⬅️ Hapus Titik Terakhir
+        </button>
+        
+        <!-- Tombol Biru untuk simpan data -->
+        <button onclick="inputPelanggan()" class="flex-1 bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold py-2 px-3 rounded-lg shadow-lg">
+            💾 Input Pelanggan
+        </button>
+    </div>
+    
+    <!-- Tombol Merah kecil untuk reset total -->
+    <button onclick="resetTotal()" class="w-full bg-red-700 text-white text-[10px] py-1 rounded-lg opacity-70">
+        Reset Total (Ulang dari Server)
+    </button>
+</div>
     <div id="map"></div>
     <div class="mt-3 p-3 bg-slate-900/50 rounded-lg border border-slate-700">
         <p id="koordinat" class="text-sm text-slate-300">📍 Klik peta untuk ambil titik koordinat ODP</p>
@@ -111,10 +131,76 @@
     </div>
 
     <footer class="mt-8 text-center text-slate-500 text-xs">
-        &copy; 2026 Zea Net - Fiber Network Management
+        &copy; 2026 Zea Net Management
     </footer>
 </body>
 <script>
+   // 1. SETING PETA ZEA NET (Sindanglaya)
+var map = L.map('map').setView([-6.729792, 107.043763], 15); 
+
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: 'Zea Net Maps'
+}).addTo(map);
+
+var koordinatJalur = [[-6.729792, 107.043763]]; 
+var semuaMarker = [];
+var kabelFiber;
+
+function gambarKabel() {
+    if (kabelFiber) { map.removeLayer(kabelFiber); }
+    kabelFiber = L.polyline(koordinatJalur, {
+        color: 'red',
+        weight: 4,
+        dashArray: '10, 10'
+    }).addTo(map);
+}
+
+// Marker Server Sindanglaya
+var server = L.marker(koordinatJalur[0]).addTo(map).bindPopup("Server Utama");
+semuaMarker.push(server);
+gambarKabel();
+
+// FITUR KLIK: Nambah ODP & Sambung Kabel
+map.on('click', function(e) {
+    var titikBaru = [e.latlng.lat, e.latlng.lng];
+    koordinatJalur.push(titikBaru);
+    
+    var odpBaru = L.marker(titikBaru).addTo(map)
+        .bindPopup("ODP Baru (Titik " + koordinatJalur.length + ")");
+    semuaMarker.push(odpBaru);
+    
+    gambarKabel();
+
+    // Update teks koordinat agar Bapak bisa lihat angkanya
+    var el = document.getElementById('koordinat');
+    if(el) {
+        el.innerHTML = "📍 Koordinat ODP: " + titikBaru[0].toFixed(6) + ", " + titikBaru[1].toFixed(6);
+    }
+});
+
+// --- KODE BARU: HAPUS PER TITIK & RESET ---
+function hapusTerakhir() {
+    if (koordinatJalur.length > 1) {
+        koordinatJalur.pop(); 
+        var markerTerakhir = semuaMarker.pop(); 
+        map.removeLayer(markerTerakhir); 
+        gambarKabel(); 
+        
+        var el = document.getElementById('koordinat');
+        if(el) {
+            var titikSekarang = koordinatJalur[koordinatJalur.length - 1];
+            el.innerHTML = "📍 Mundur ke: " + titikSekarang[0].toFixed(6) + ", " + titikSekarang[1].toFixed(6);
+        }
+    } else {
+        alert("Sudah sampai titik Server!");
+    }
+}
+
+function resetTotal() {
+    if(confirm("Yakin mau hapus SEMUA jalur?")) {
+        location.reload();
+    }
+}
 async function inputPelanggan() {
     const nama = prompt("Masukkan Nama Pelanggan:");
     const paket = prompt("Masukkan Paket (misal: Rumahan 10Mbps):");
