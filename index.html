@@ -11,6 +11,19 @@
         .btn-green { background: #10b981; }
         .btn-blue { background: #3b82f6; }
     </style>
+    <!-- Library Peta Leaflet -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <style>
+        #map { 
+            height: 400px; 
+            width: 100%; 
+            margin-top: 20px; 
+            border-radius: 10px;
+            border: 2px solid #007bff;
+        }
+  }
+</style>
 </head>
 <body class="p-4 md:p-8">
     <!-- Header -->
@@ -19,6 +32,17 @@
         <div class="text-right">
             <p class="text-xs text-slate-400">Monitoring: <span class="text-emerald-500 font-bold">ONLINE</span></p>
             <p class="text-xs text-slate-400">IP: 103.x.x.x (Publik)</p>
+            <!-- Kotak Peta ODP -->
+<div class="card p-4 mt-6">
+    <div class="flex justify-between items-center mb-4">
+        <h2 class="text-lg font-bold text-emerald-400">Peta Sebaran ODP & Jalur</h2>
+        <span class="text-xs bg-emerald-500/20 text-emerald-400 px-2 py-1 rounded">Live GPS</span>
+    </div>
+    <div id="map"></div>
+    <div class="mt-3 p-3 bg-slate-900/50 rounded-lg border border-slate-700">
+        <p id="koordinat" class="text-sm text-slate-300">📍 Klik peta untuk ambil titik koordinat ODP</p>
+    </div>
+</div>
         </div>
     </div>
 
